@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🎂</title>
+
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dbeafe, #e0f2fe, #f0f9ff);
+    font-family: "Segoe UI", sans-serif;
+    overflow-x: hidden;
+}
+
+/* BACKGROUND */
+.bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+.flower {
+    position: absolute;
+    font-size: 22px;
+    opacity: 0.35;
+    animation: float 14s linear infinite;
+}
+@keyframes float {
+    from { transform: translateY(110vh); }
+    to { transform: translateY(-10vh); }
+}
+.cat {
+    position: fixed;
+    bottom: 5px;
+    right: 10px;
+    font-size: 70px;
+    opacity: 0.85;
+    animation: catIdle 3s ease-in-out infinite;
+    z-index: 1;
+}
+@keyframes catIdle {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+/* CARD */
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    position: relative;
+    z-index: 2;
+}
+.card {
+    background: #ffffffcc;
+    width: 100%;
+    max-width: 380px;
+    padding: 25px 20px;
+    border-radius: 26px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    backdrop-filter: blur(6px);
+}
+
+h2 {
+    color: #3b82f6;
+    margin: 10px 0;
+    font-size: 22px;
+}
+p {
+    color: #334155;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.cake {
+    font-size: 80px;
+    cursor: pointer;
+    animation: bounce 1.5s infinite;
+}
+@keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #bfdbfe;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 15px;
+}
+button {
+    margin-top: 12px;
+    padding: 10px 26px;
+    border: none;
+    border-radius: 22px;
+    background: #93c5fd;
+    color: #1e3a8a;
+    font-size: 15px;
+    cursor: pointer;
+}
+.hidden {
+    display: none;
+}
+
+#typingText {
+    white-space: pre-line;
+    font-size: 15px;
+    min-height: 120px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg" id="bg"></div>
+<div class="cat">🥕🥔</div>
+
+<audio autoplay loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7e62c6c9f4.mp3" type="audio/mpeg">
+</audio>
+
+<div class="wrapper">
+<div class="card">
+
+<div id="intro">
+    <h2> Are u ready to jump into a suppppperrr tiny 'musni GAME' ?!</h2>
+    <p>Sinh ngày nhiu thì vượt qua nhiu thử thách ò 🚵‍♀️🤹‍♀️</p>
+</div>
+
+<div class="cake" id="cake" onclick="startGame()">🎂</div>
+
+<div id="question" class="hidden">
+    <p id="qText"></p>
+    <input id="answer" placeholder="Trả lời cho đúng🫵">
+    <button onclick="checkAnswer()">Tiếp tục</button>
+</div>
+
+<div id="result" class="hidden">
+    <h2>🎉 Happy Birthday 🎉</h2>
+    <p id="typingText"></p>
+</div>
+
+</div>
+</div>
+
+<script>
+/* FLOWER */
+const bg = document.getElementById("bg");
+for (let i = 0; i < 20; i++) {
+    let f = document.createElement("div");
+    f.className = "flower";
+    f.innerHTML = "🎈thổi nến đii!!🎁";
+    f.style.left = Math.random() * 100 + "vw";
+    f.style.animationDuration = (12 + Math.random() * 6) + "s";
+    bg.appendChild(f);
+}
+
+/* QUESTIONS (7 CÂU) */
+const questions = [
+    { q: "Tụi mình gặp nhau hòi lớp mấy", a: ["6"] },
+    { q: "Chuỗi tiktok tính đến thời điểm này?", a: ["192"] },
+    { q: "Tên tui khắc lên 'bút chì nhóm' là gi ( Vd: rốt)", a: ["tây"] },
+    { q: "Lần đầu tui xún nhà bạn ngủ là dịp gi (viết thường, có cách)", a: ["nghinh ông"] },
+    { q: "mai phấy rịt khớ lơ? ", a: ["xanh lá"] },
+    { q: "Hồ Ngọc Phương Vy thấy Trương Ngọc Dung dễ thương? (dĩ nhiênn/ tào lao/ còn phải hỏi hả)", a: ["dĩ nhiênn", "còn phải hỏi hả"] },
+    { q: "Bạn muốn nói gi với toi trước khi đọc thiệp ko (Ngọc Dung là tuyệt nhất/ hong)", a: ["Ngọc Dung là tuyệt nhất"] }
+];
+
+let index = 0;
+
+function startGame() {
+    document.getElementById("cake").style.display = "none";
+    document.getElementById("question").classList.remove("hidden");
+    showQuestion();
+}
+
+function showQuestion() {
+    document.getElementById("qText").innerText = "❓ " + questions[index].q;
+    document.getElementById("answer").value = "";
+}
+
+function checkAnswer() {
+    let user = document.getElementById("answer").value.toLowerCase().trim();
+    if (questions[index].a.includes(user)) {
+        index++;
+        if (index < questions.length) {
+            showQuestion();
+        } else {
+            finishGame();
+        }
+    } else {
+        alert("Trớt quớt luôn má");
+    }
+}
+
+/* TYPING */
+const message =
+"Bingggooo, cuối cùng cũng đúng được ròi đó hả😏😏\n\n" +
+"Hoi kệ, chúc bà Dii sanh nhật bùng cháy rực rỡ như ánh mắt toi, mãi hạnh phúc, thành công, trong trẻo, dễ thương, dễ chịu, blabla:>\n\n" +
+"Ngắn gọn thoi, mong bà luôn trân trọng và khắc ghi tình bạn này\n\n" +
+"Hị hị HAPPY BIRTHDAY!!!!";
+
+function typeText(text, speed = 40) {
+    let i = 0;
+    const el = document.getElementById("typingText");
+    el.innerHTML = "";
+    const timer = setInterval(() => {
+        el.innerHTML += text.charAt(i);
+        i++;
+        if (i >= text.length) clearInterval(timer);
+    }, speed);
+}
+
+function finishGame() {
+    document.getElementById("question").classList.add("hidden");
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("result").classList.remove("hidden");
+    typeText(message);
+}
+</script>
+
+</body>
+</html>
